@@ -1,0 +1,3 @@
+# Ignore CSS and PHP backend as they are managed by other developers
+style.css
+backend/
