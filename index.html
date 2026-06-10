@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Inspector</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=13">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      IP Inspector
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="top-section">
+    <h1>IP Address Lookup</h1>
+    <p>Enter an IP address to see location, network and other info.</p>
+
+    <div class="search-wrap">
+      <input id="ip-input" type="text" placeholder="Enter IP address..." autocomplete="off" spellcheck="false" maxlength="45">
+      <button id="btn-search">
+        <span class="btn-label">Search</span>
+        <span class="btn-spin" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <button id="btn-myip">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px;">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="3"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+      </svg>
+      Use my IP address
+    </button>
+    <div id="err-box" class="err-box" hidden></div>
+  </div>
+
+  <!-- Intro Block (Visible when no result yet) -->
+  <div id="intro-block" class="intro-block">
+    <h2 class="intro-title">Did You Know?</h2>
+    <div class="intro-grid">
+      <div class="intro-card">
+        <div class="intro-icon bg-blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <h3>What is an IP address?</h3>
+        <p>An Internet Protocol address is a unique identifier for your device on the network. It works just like your physical home mailing address.</p>
+      </div>
+
+      <div class="intro-card">
+        <div class="intro-icon bg-green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 17L10 11L4 5M20 19H12"/>
+          </svg>
+        </div>
+        <h3>IPv4 vs IPv6</h3>
+        <p>IPv4 addresses are limited (4.3 billion) and running out. The newer IPv6 standard provides trillions of addresses and is more secure.</p>
+      </div>
+
+      <div class="intro-card">
+        <div class="intro-icon bg-purple">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <h3>Geolocation Accuracy</h3>
+        <p>IP geolocation shows the approximate location of your ISP's nearest server, not your exact physical GPS coordinates.</p>
+      </div>
+
+      <div class="intro-card">
+        <div class="intro-icon bg-orange">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3>Security Tip</h3>
+        <p>When using public Wi-Fi networks, always use a VPN to protect your IP address, traffic, and personal data from snooping.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-block" class="result-block" hidden>
+
+    <div class="ip-card">
+      <div class="ip-card-left">
+        <img id="ip-flag" src="" alt="" hidden>
+        <div>
+          <div class="small-label">Result</div>
+          <div id="r-ip" class="ip-display"></div>
+        </div>
+      </div>
+      <div class="ip-card-actions">
+        <button id="btn-country" class="btn-country" hidden>
+          About this country
+        </button>
+        <button id="btn-copy" class="btn-copy">Copy</button>
+      </div>
+    </div>
+
+    <div class="data-table">
+      <div class="dt-row">
+        <div class="dt-cell">
+          <div class="dt-label">City</div>
+          <div id="r-city" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">Region</div>
+          <div id="r-region" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">Country</div>
+          <div id="r-country" class="dt-val"></div>
+        </div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-cell">
+          <div class="dt-label">Country Code</div>
+          <div id="r-cc" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">Calling Code</div>
+          <div id="r-call" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">Postal Code</div>
+          <div id="r-postal" class="dt-val"></div>
+        </div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-cell">
+          <div class="dt-label">Timezone</div>
+          <div id="r-tz" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">UTC Offset</div>
+          <div id="r-utc" class="dt-val"></div>
+        </div>
+        <div class="dt-cell dt-empty"></div>
+      </div>
+      <div class="dt-row">
+        <div class="dt-cell">
+          <div class="dt-label">Coordinates</div>
+          <div id="r-coords" class="dt-val"></div>
+        </div>
+        <div class="dt-cell">
+          <div class="dt-label">ASN</div>
+          <div id="r-asn" class="dt-val"></div>
+        </div>
+        <div class="dt-cell dt-empty"></div>
+      </div>
+      <div class="dt-row dt-full">
+        <div class="dt-cell full">
+          <div class="dt-label">ISP / Organization</div>
+          <div id="r-org" class="dt-val"></div>
+        </div>
+      </div>
+      <div class="dt-row dt-full">
+        <div class="dt-cell full">
+          <div class="dt-label">Network</div>
+          <div id="r-net" class="dt-val"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- country info modal -->
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title-wrap">
+        <img id="m-flag" src="" alt="" class="m-flag">
+        <div>
+          <div id="m-name" class="m-country-name"></div>
+          <div id="m-official" class="m-official-name"></div>
+        </div>
+      </div>
+      <button id="modal-close" class="modal-close" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="modal-loading" class="modal-loading">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5">
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+      </svg>
+      Loading...
+    </div>
+
+    <div id="modal-body" class="modal-body" hidden>
+      <div class="m-grid">
+        <div class="m-item">
+          <div class="m-lbl">Capital</div>
+          <div id="m-capital" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Population</div>
+          <div id="m-population" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Area</div>
+          <div id="m-area" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Region</div>
+          <div id="m-region" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Subregion</div>
+          <div id="m-subregion" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Timezones</div>
+          <div id="m-tz" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Top-level Domain</div>
+          <div id="m-tld" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">FIFA Code</div>
+          <div id="m-fifa" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Independent</div>
+          <div id="m-independent" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">UN Member</div>
+          <div id="m-un" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Driving Side</div>
+          <div id="m-drive" class="m-val"></div>
+        </div>
+        <div class="m-item">
+          <div class="m-lbl">Week Starts</div>
+          <div id="m-week" class="m-val"></div>
+        </div>
+        <div class="m-item m-wide">
+          <div class="m-lbl">Languages</div>
+          <div id="m-langs" class="m-val"></div>
+        </div>
+        <div class="m-item m-wide">
+          <div class="m-lbl">Currencies</div>
+          <div id="m-currencies" class="m-val"></div>
+        </div>
+        <div class="m-item m-wide">
+          <div class="m-lbl">Bordering Countries</div>
+          <div id="m-borders" class="m-val"></div>
+        </div>
+      </div>
+
+      <div class="m-footer">
+        <a id="m-maps" href="#" target="_blank" rel="noopener" class="m-maps-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Open in Google Maps
+        </a>
+      </div>
+    </div>
+
+    <div id="modal-err" class="modal-err" hidden></div>
+  </div>
+</div>
+
+<footer class="footer">IP Inspector &copy; 2025</footer>
+
+<script src="script.js?v=10"></script>
+</body>
+</html>
